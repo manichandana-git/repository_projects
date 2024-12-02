@@ -12,26 +12,32 @@ import java.io.IOException;
 import java.util.*;
 
 public class ModelCheckerController {
-    private ModelCheckerView view;
-    private KripkeStructure kripkeStructure;
+    // This controller method connects the view with the model and handles user interactions.
+    private ModelCheckerView view; // For user interface.
+    private KripkeStructure kripkeStructure; //For checking the Kripke structure.
 
     public ModelCheckerController(ModelCheckerView view) {
         this.view = view;
         this.view.addCheckListener(new CheckButtonListener());
     }
 
+    /*Function to load Kripke structure from a file which has the following
+        States (first line): Comma-separated state IDs.
+        Transitions (lines starting with 't'): Transitions in "state1 - state2" format.
+        Atomic propositions (remaining lines): State ID followed by the propositions it satisfies.
+        filePath The path to the Kripke structure file.*/
     private void loadKripkeStructure(String filePath) {
-        List<State> states = new ArrayList<>();
-        List<Transition> transitions = new ArrayList<>();
-        Map<String, State> stateMap = new HashMap<>();
+        List<State> states = new ArrayList<>(); //List for storing states. 
+        List<Transition> transitions = new ArrayList<>(); //List for storing transitions.
+        Map<String, State> stateMap = new HashMap<>(); //Map for quickly finding a state using IDs.
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
 
-            // Parse states
+            // Parse the states (first line in the file)
             line = reader.readLine();
             if (line != null) {
-                String[] stateIds = line.split(", ");
+                String[] stateIds = line.split(", "); //split state ids by comma and space
                 for (String stateId : stateIds) {
                     State state = new State(stateId, new HashSet<>());
                     states.add(state);
