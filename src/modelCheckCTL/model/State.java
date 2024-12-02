@@ -19,3 +19,4 @@ public class State {
         return atoms;
     }
 }
+
